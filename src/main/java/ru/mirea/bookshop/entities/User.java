@@ -17,7 +17,6 @@ import java.util.Set;
 
 @Entity
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "t_user")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
@@ -44,8 +43,11 @@ public class User implements UserDetails {
     @Column(name = "active")
     private boolean active;
 
+    @Column(name = "profile_picture_name")
+    private String profilePictureName;
+
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
-    @CollectionTable(name = "usr_role", joinColumns = @JoinColumn(name = "usr_id"))
+    @CollectionTable(name = "t_usr_role", joinColumns = @JoinColumn(name = "usr_id"))
     @Enumerated(EnumType.STRING)
     @Cascade(value = {org.hibernate.annotations.CascadeType.REFRESH})
     private Set<Role> roles;
@@ -53,17 +55,17 @@ public class User implements UserDetails {
     @ManyToMany(cascade = {CascadeType.REFRESH}, fetch = FetchType.EAGER)
     @JoinTable(name = "t_wishlist",
     joinColumns = { @JoinColumn(name = "usr_id", referencedColumnName = "id",
-            nullable = false, updatable = false) },
+            nullable = false) },
     inverseJoinColumns = { @JoinColumn(name = "book_id", referencedColumnName = "id",
-            nullable = false, updatable = false)})
+            nullable = false)})
     private List<Book> wishList;
 
     @ManyToMany(cascade = {CascadeType.REFRESH}, fetch = FetchType.EAGER)
     @JoinTable(name = "t_cart",
             joinColumns = { @JoinColumn(name = "usr_id", referencedColumnName = "id",
-                    nullable = false, updatable = false) },
+                    nullable = false) },
             inverseJoinColumns = { @JoinColumn(name = "book_id", referencedColumnName = "id",
-                    nullable = false, updatable = false)})
+                    nullable = false)})
     private List<Book> cart;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)

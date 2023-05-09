@@ -1,5 +1,6 @@
 package ru.mirea.bookshop.controllers;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +16,7 @@ import ru.mirea.bookshop.services.interfaces.UserService;
 
 @Controller
 @RequestMapping("/order")
+@PreAuthorize("hasAnyAuthority('ROLE_USER')")
 public class OrderController {
 
     private final OrderService orderService;
@@ -52,6 +54,6 @@ public class OrderController {
         } catch (IllegalArgumentException e) {
             model.addAttribute("message", e.getMessage());
         }
-        return "orderpage";
+        return "order_page";
     }
 }

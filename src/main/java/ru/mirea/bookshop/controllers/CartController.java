@@ -1,5 +1,6 @@
 package ru.mirea.bookshop.controllers;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,6 +14,7 @@ import ru.mirea.bookshop.services.interfaces.UserService;
 
 @Controller
 @RequestMapping("/cart")
+@PreAuthorize("hasAnyAuthority('ROLE_USER')")
 public class CartController {
 
     private final BookService bookService;
@@ -35,7 +37,7 @@ public class CartController {
                 user.getCart().add(book);
                 userService.update(user);
             }
-            return String.format("redirect:/book/%d", book.getId());
+            return String.format("redirect:/book_page/%d", book.getId());
         } catch (IllegalArgumentException e) {
             model.addAttribute("message", "Ошибка!");
             return "main";

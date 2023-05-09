@@ -10,12 +10,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
-import ru.mirea.bookshop.config.customhandlers.CustomLoginFailureHandler;
-import ru.mirea.bookshop.config.customhandlers.CustomLoginSuccessHandler;
-import ru.mirea.bookshop.config.customhandlers.CustomLogoutSuccessHandler;
 import ru.mirea.bookshop.services.interfaces.UserService;
 
 @Configuration
@@ -33,7 +27,7 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
                 .cors().disable()
@@ -41,31 +35,26 @@ public class WebSecurityConfig {
                         .requestMatchers(
                                 "/",
                                 "/home",
+                                "/error",
                                 "/registration",
-                                "/profile",
-                                "/book/*"
+                                "/search_books",
+                                "/book_page/**",
+                                "/favicon.ico",
+                                "/img/**",
+                                "/css/**",
+                                "/js/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin((form) -> form
                         .loginPage("/login")
-                        .successHandler(customLoginSuccessHandler())
-                        .failureHandler(customLoginFailureHandler())
                         .permitAll()
                 )
                 .logout((form) -> form
                         .logoutUrl("/profile/logout")
-                        .logoutSuccessHandler(customLogoutSuccessHandler())
                         .invalidateHttpSession(true)
                         .permitAll());
         return http.build();
-    }
-
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web
-                .ignoring()
-                .requestMatchers("/favicon.ico");
     }
 
     @Autowired
@@ -73,20 +62,5 @@ public class WebSecurityConfig {
         auth
                 .userDetailsService(userService)
                 .passwordEncoder(passwordEncoder);
-    }
-
-    @Bean
-    public LogoutSuccessHandler customLogoutSuccessHandler() {
-        return new CustomLogoutSuccessHandler(userService);
-    }
-
-    @Bean
-    public AuthenticationSuccessHandler customLoginSuccessHandler() {
-        return new CustomLoginSuccessHandler(userService);
-    }
-
-    @Bean
-    public AuthenticationFailureHandler customLoginFailureHandler() {
-        return new CustomLoginFailureHandler();
     }
 }

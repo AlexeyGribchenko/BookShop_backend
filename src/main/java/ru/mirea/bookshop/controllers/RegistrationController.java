@@ -1,15 +1,23 @@
 package ru.mirea.bookshop.controllers;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import ru.mirea.bookshop.entities.User;
 import ru.mirea.bookshop.services.interfaces.UserService;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 @Controller
+@PreAuthorize("hasAnyAuthority('ROLE_USER')")
 public class RegistrationController {
 
     private final UserService userService;
@@ -26,11 +34,19 @@ public class RegistrationController {
 
     @PostMapping("/registration")
     public String addUser(
-            @ModelAttribute("user_form") User user, BindingResult bindingResult, Model model
+            @ModelAttribute("user_form") User user,
+            @RequestParam(name = "birthDateString") String birthDateString,
+            BindingResult bindingResult,
+            Model model
             ) {
         if (bindingResult.hasErrors()) {
             System.out.println(bindingResult.getAllErrors());
             return "registration";
+        }
+        try {
+            user.setBirthDate(new SimpleDateFormat("yyyy-MM-dd").parse(birthDateString));
+        } catch (ParseException e) {
+            user.setBirthDate(null);
         }
         if (!userService.add(user)) {
             model.addAttribute("message", "Ползователь с таким логином уже существует!");
@@ -39,13 +55,4 @@ public class RegistrationController {
         model.addAttribute("message", "Успешная регистрация!");
         return "login";
     }
-    /*
-    кароче, а не смогжет ли какой-то пользователь удалить другого?
-    надо подумать и мб нормально сделать
-     */
-//    @PostMapping("/delete_user/{id}")
-//    public String deleteUser(@PathVariable(name = "id") Long id, Model model) {
-//        userService.remove(id);
-//        return "login";
-//    }
 }

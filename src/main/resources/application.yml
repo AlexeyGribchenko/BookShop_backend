@@ -12,6 +12,12 @@ spring:
     username: "postgres"
     password: "TheWitcher3"
   jpa:
+    open-in-view: false
     generate-ddl: true
     hibernate:
       ddl-auto: update
+  freemarker:
+    expose-session-attributes: true
+
+upload:
+  path: "C:/Users/_ADMIN_/IdeaProjects/BookShop/src/main/resources"

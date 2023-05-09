@@ -49,32 +49,10 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<Book> filterByGenre(Set<Genre> genres) {
-        return bookRepository.findAll()
-                .stream()
-                .filter(book -> book.getGenres().containsAll(genres))
-                .toList();
-    }
-
-
-
-    @Override
-    public List<Book> filterByName(String name) {
-        return bookRepository.findAll()
-                .stream()
-                .filter(book -> book
-                        .getName().toLowerCase()
-                        .contains(name.toLowerCase()))
-                .toList();
-    }
-
-    @Override
-    public List<Book> filterByAuthor(String author) {
-        return bookRepository.findAll()
-                .stream()
-                .filter(book -> book
-                        .getAuthor().toLowerCase()
-                        .contains(author.toLowerCase()))
+    public List<Book> search(String searchPrompt) {
+        return bookRepository.findAll().stream()
+                .filter(book ->
+                        (book.getName().toLowerCase() + " " + book.getAuthor().toLowerCase()).contains(searchPrompt))
                 .toList();
     }
 }

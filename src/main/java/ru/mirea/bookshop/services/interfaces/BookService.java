@@ -12,7 +12,5 @@ public interface BookService {
     List<Book> getAll();
 
     Book getBook(Long id);
-    List<Book> filterByGenre(Set<Genre> genres);
-    List<Book> filterByName(String name);
-    List<Book> filterByAuthor(String author);
+    List<Book> search(String searchPrompt);
 }

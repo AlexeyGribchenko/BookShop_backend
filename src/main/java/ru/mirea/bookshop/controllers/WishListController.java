@@ -1,5 +1,6 @@
 package ru.mirea.bookshop.controllers;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,6 +14,7 @@ import ru.mirea.bookshop.services.interfaces.UserService;
 
 @Controller
 @RequestMapping("/wishlist")
+@PreAuthorize("hasAnyAuthority('ROLE_USER')")
 public class WishListController {
 
     private final BookService bookService;
@@ -35,7 +37,7 @@ public class WishListController {
                 user.getWishList().add(book);
                 userService.update(user);
             }
-            return String.format("redirect:/book/%d", book.getId());
+            return String.format("redirect:/book_page/%d", book.getId());
         } catch (IllegalArgumentException e) {
             model.addAttribute("message", "Ошибка!");
             return "main";
@@ -51,6 +53,26 @@ public class WishListController {
         try {
             Book book = bookService.getBook(id);
             user.getWishList().remove(book);
+            userService.update(user);
+            return "redirect:/profile/wishlist";
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("message", "Ошибка!");
+            return "main";
+        }
+    }
+
+    @PostMapping("/move_to_cart/{id}")
+    public String moveToCart(
+            @PathVariable(name = "id") Long id,
+            @AuthenticationPrincipal User user,
+            Model model
+    ) {
+        try {
+            Book book = bookService.getBook(id);
+            user.getWishList().remove(book);
+            if (!user.getCart().contains(book)) {
+                user.getCart().add(book);
+            }
             userService.update(user);
             return "redirect:/profile/wishlist";
         } catch (IllegalArgumentException e) {

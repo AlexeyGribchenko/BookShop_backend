@@ -26,7 +26,7 @@ public class Book {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "description")
+    @Column(name = "description", length = 2048)
     private String description;
 
     @Column(name = "author")
@@ -34,6 +34,9 @@ public class Book {
 
     @Column(name = "price")
     private Integer price;
+
+    @Column(name = "img_name")
+    private String imgName;
 
     @ElementCollection(targetClass = Genre.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "book_genre", joinColumns = @JoinColumn(name = "book_id"))

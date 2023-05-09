@@ -3,11 +3,15 @@
 
 
 <@c.page>
-    Избранное
-    <@b.book_list wishlist; book>
-        <form action="/wishlist/remove/${book.getId()}" method="post">
-            <input type="submit" value="Удалить из избранного">
-        </form>
-    </@b.book_list>
-    <a href="/profile">назад</a>
+    <h4>Избранное</h4>
+    <@b.book_row_list wishlist; book>
+        <div class="row">
+            <form class="col-6" action="/wishlist/move_to_cart/${book.getId()}" method="post">
+                <button class="btn btn-outline-success" type="submit">Переместить в корзину</button>
+            </form>
+            <form class="col-6" action="/wishlist/remove/${book.getId()}" method="post">
+                <button class="btn btn-outline-danger" type="submit">Удалить из избранного</button>
+            </form>
+        </div>
+    </@b.book_row_list>
 </@c.page>

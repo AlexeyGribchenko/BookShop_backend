@@ -1,87 +1,92 @@
 package ru.mirea.bookshop.controllers;
 
-import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import ru.mirea.bookshop.entities.User;
-import ru.mirea.bookshop.services.interfaces.BookService;
 import ru.mirea.bookshop.services.interfaces.UserService;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.UUID;
+
 @Controller
-@RequestMapping("/profile")
+@RequestMapping("/user")
+@PreAuthorize("hasAnyAuthority('ROLE_USER')")
 public class UserController {
 
+    @Value("${upload.path}")
+    private String uploadPath;
+
     private final UserService userService;
-    private final BookService bookService;
 
-    public UserController(UserService userService, BookService bookService) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.bookService = bookService;
     }
 
-    @GetMapping()
-    public String showInfo(
+    @GetMapping("/all")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_SUPER_ADMIN')")
+    public String showAll(Model model) {
+        model.addAttribute("userList", userService.getAll());
+        return "users_admin";
+    }
+
+    @PostMapping("/change_activity/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_SUPER_ADMIN')")
+    public String deactivateUserById(@PathVariable(name = "id") Long id, Model model) {
+        userService.changeActivity(id);
+        model.addAttribute("userList", userService.getAll());
+        return "users_admin";
+    }
+
+    @PostMapping("/delete/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_SUPER_ADMIN')")
+    public String deleteUserById(@PathVariable(name = "id") Long id, Model model) {
+        userService.remove(id);
+        model.addAttribute("userList", userService.getAll());
+        return "users_admin";
+    }
+
+    @PostMapping("/change_permissions/{id}")
+    @PreAuthorize("hasAuthority('ROLE_SUPER_ADMIN')")
+    public String changePermissions(@PathVariable(name = "id") Long id, Model model) {
+        userService.changePermissions(id);
+        model.addAttribute("userList", userService.getAll());
+        return "users_admin";
+    }
+
+    @PostMapping("/update_profile_picture/{id}")
+    public String updateProfilePicture(
             @AuthenticationPrincipal User user,
-            Model model
-    ) {
-        if (user != null) {
-            model.addAttribute("user", user);
-            model.addAttribute("isLogined", true);
+            @PathVariable(name = "id") Long id,
+            @RequestParam(name = "profilePicture") MultipartFile file,
+            Model model) throws IOException {
+        if (!file.isEmpty()) {
+            File uploadDir = new File(uploadPath + "/static/img/profile_pictures");
+
+            if (!uploadDir.exists()) {
+                uploadDir.mkdir();
+            }
+
+            File userCurrentProfilePicture =
+                    new File(uploadPath + "/static/img/profile_pictures/" + user.getProfilePictureName());
+            userCurrentProfilePicture.deleteOnExit();
+
+            String uuidFile = UUID.randomUUID().toString();
+            String resultFileName = uuidFile + "." + file.getOriginalFilename();
+
+            file.transferTo(new File(uploadPath + "/static/img/profile_pictures/" + resultFileName));
+
+            user.setProfilePictureName(resultFileName);
         } else {
-            model.addAttribute("isLogined", false);
+            user.setProfilePictureName("default_profile_img.png");
         }
+        userService.update(user);
+        model.addAttribute("user", user);
         return "profile";
-    }
-
-    @GetMapping("/cart")
-    public String showCart(
-            @AuthenticationPrincipal User user,
-            Model model
-    ) {
-        if (user != null) {
-            model.addAttribute("cart_list", user.getCart());
-        } else {
-            model.addAttribute("message", "Вы не вошли!");
-        }
-        return "cart";
-    }
-
-    @GetMapping("/wishlist")
-    public String showWishList(
-            @AuthenticationPrincipal User user,
-            Model model
-    ) {
-        if (user != null) {
-            model.addAttribute("wishlist", user.getWishList());
-        } else {
-            model.addAttribute("message", "Вы не вошли!");
-        }
-        return "wishlist";
-    }
-
-    @GetMapping("/orders")
-    public String showOrders(
-            @AuthenticationPrincipal User user,
-            Model model
-    ) {
-        if (user != null) {
-            model.addAttribute("order_list", user.getOrders());
-        } else {
-            model.addAttribute("message", "Вы не вошли!");
-        }
-        return "orders";
-    }
-
-    @GetMapping("/delete")
-    public String delete(
-            @AuthenticationPrincipal User user,
-            Model model
-    ) {
-        userService.remove(user.getId());
-        return "redirect:/profile/logout";
     }
 }
