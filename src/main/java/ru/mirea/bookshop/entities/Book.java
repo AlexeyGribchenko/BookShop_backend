@@ -5,9 +5,6 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.mirea.bookshop.entities.enums.Genre;
-
-import java.util.Set;
 
 @Entity
 @Data
@@ -37,9 +34,4 @@ public class Book {
 
     @Column(name = "img_name")
     private String imgName;
-
-    @ElementCollection(targetClass = Genre.class, fetch = FetchType.EAGER)
-    @CollectionTable(name = "book_genre", joinColumns = @JoinColumn(name = "book_id"))
-    @Enumerated(EnumType.STRING)
-    private Set<Genre> genres;
 }

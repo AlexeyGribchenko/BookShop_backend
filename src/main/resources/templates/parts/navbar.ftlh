@@ -33,7 +33,7 @@
                 </#if>
             </ul>
             <form action="/search_books" method="get" class="d-flex">
-                <input class="form-control me-2" type="search" placeholder="Поиск" aria-label="Search" name="searchPrompt">
+                <input class="form-control me-2" type="search" placeholder="Поиск" aria-label="Search" name="searchPrompt" />
                 <button class="btn btn-outline-success" type="submit">Поиск</button>
             </form>
         </div>

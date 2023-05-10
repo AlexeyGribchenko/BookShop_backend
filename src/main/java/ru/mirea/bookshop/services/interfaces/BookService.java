@@ -1,10 +1,8 @@
 package ru.mirea.bookshop.services.interfaces;
 
 import ru.mirea.bookshop.entities.Book;
-import ru.mirea.bookshop.entities.enums.Genre;
 
 import java.util.List;
-import java.util.Set;
 
 public interface BookService {
     void add(Book book);

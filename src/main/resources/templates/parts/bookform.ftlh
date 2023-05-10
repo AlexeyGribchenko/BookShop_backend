@@ -15,7 +15,7 @@
             <div class="d-flex" style="overflow: hidden">
                 <img class="card-img-top"
                      style="width: 100%; height: 15vw; object-fit: contain"
-                     src="/img/${book.getImgName()}" alt="no fucking way">
+                     src="/img/${book.getImgName()}" alt="no fucking way" />
             </div>
             <div class="card-body">
                 <div class="card-title text-truncate">
@@ -29,11 +29,11 @@
 
 <#macro book_row_list bookList>
     <#list bookList as book>
-        <hr>
+        <hr />
         <div class="row mt-4">
             <a class="col col-3 text-decoration-none"
                 href="/book_page/${book.getId()}">
-                <img class="w-100" src="/img/${book.getImgName()}" alt="no fucking way">
+                <img class="w-100" src="/img/${book.getImgName()}" alt="no fucking way" />
             </a>
 
             <div class="row col-8 align-content-between">

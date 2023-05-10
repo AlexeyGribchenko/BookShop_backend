@@ -53,4 +53,9 @@ public class Order {
         this.totalPrice = totalPrice.orElse(0);
         this.bookList = List.copyOf(books);
     }
+
+    @Override
+    public String toString() {
+        return String.format("Order(%d)", id);
+    }
 }

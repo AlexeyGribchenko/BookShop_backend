@@ -17,7 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Controller
-@PreAuthorize("hasAnyAuthority('ROLE_USER')")
+@PreAuthorize("hasAnyAuthority('ROLE_ANONYMOUS')")
 public class RegistrationController {
 
     private final UserService userService;
@@ -48,11 +48,13 @@ public class RegistrationController {
         } catch (ParseException e) {
             user.setBirthDate(null);
         }
+        String userName = user.getUsername();
+        String userPassword = user.getUsername();
         if (!userService.add(user)) {
             model.addAttribute("message", "Ползователь с таким логином уже существует!");
             return "registration";
         }
         model.addAttribute("message", "Успешная регистрация!");
-        return "login";
+        return String.format("forward:/login?username=%s&password=%s", userName, userPassword);
     }
 }

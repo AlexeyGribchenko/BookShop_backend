@@ -8,9 +8,9 @@
         </div>
 
         <ul class="nav col-md-4 justify-content-end list-unstyled d-flex">
-            <li class="ms-3"><a class="text-muted" target="_blank" href="https://github.com/AlexeyGribchenko"><img style="height: 24px; width: 24px; opacity: 0.6" src="/img/icons/github.png"></a></li>
-            <li class="ms-3"><a class="text-muted" target="_blank" href="https://t.me/lesha_olesha"><img style="height: 24px; width: 24px; opacity: 0.6" src="/img/icons/telegram.png"></a></li>
-            <li class="ms-3"><a class="text-muted" target="_blank" href="https://vk.com/lesha_olesha"><img style="height: 24px; width: 24px; opacity: 0.6" src="/img/icons/vkontakte.png"></a></li>
+            <li class="ms-3"><a class="text-muted" target="_blank" href="https://github.com/AlexeyGribchenko"><img style="height: 24px; width: 24px; opacity: 0.6" src="/img/icons/github.png"/></a></li>
+            <li class="ms-3"><a class="text-muted" target="_blank" href="https://t.me/lesha_olesha"><img style="height: 24px; width: 24px; opacity: 0.6" src="/img/icons/telegram.png"/></a></li>
+            <li class="ms-3"><a class="text-muted" target="_blank" href="https://vk.com/lesha_olesha"><img style="height: 24px; width: 24px; opacity: 0.6" src="/img/icons/vkontakte.png"/></a></li>
         </ul>
     </footer>
 </div>

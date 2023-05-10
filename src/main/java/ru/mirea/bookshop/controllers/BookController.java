@@ -57,7 +57,7 @@ public class BookController {
             String uuidFile = UUID.randomUUID().toString();
             String resultFileName = uuidFile + "." + file.getOriginalFilename();
 
-            file.transferTo(new File(uploadPath + "/static/img/" + resultFileName));
+            file.transferTo(new File(uploadPath + "/uploads/" + resultFileName));
 
             book.setImgName(resultFileName);
         } else {

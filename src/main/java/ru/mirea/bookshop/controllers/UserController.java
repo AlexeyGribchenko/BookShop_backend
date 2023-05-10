@@ -66,20 +66,20 @@ public class UserController {
             @RequestParam(name = "profilePicture") MultipartFile file,
             Model model) throws IOException {
         if (!file.isEmpty()) {
-            File uploadDir = new File(uploadPath + "/static/img/profile_pictures");
+            File uploadDir = new File(uploadPath + "/uploads/profile_pictures");
 
             if (!uploadDir.exists()) {
                 uploadDir.mkdir();
             }
 
             File userCurrentProfilePicture =
-                    new File(uploadPath + "/static/img/profile_pictures/" + user.getProfilePictureName());
+                    new File(uploadPath + "/uploads/profile_pictures/" + user.getProfilePictureName());
             userCurrentProfilePicture.deleteOnExit();
 
             String uuidFile = UUID.randomUUID().toString();
             String resultFileName = uuidFile + "." + file.getOriginalFilename();
 
-            file.transferTo(new File(uploadPath + "/static/img/profile_pictures/" + resultFileName));
+            file.transferTo(new File(uploadPath + "/uploads/profile_pictures/" + resultFileName));
 
             user.setProfilePictureName(resultFileName);
         } else {

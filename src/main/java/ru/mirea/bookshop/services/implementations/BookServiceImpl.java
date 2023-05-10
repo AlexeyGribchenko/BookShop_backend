@@ -2,13 +2,11 @@ package ru.mirea.bookshop.services.implementations;
 
 import org.springframework.stereotype.Service;
 import ru.mirea.bookshop.entities.Book;
-import ru.mirea.bookshop.entities.enums.Genre;
 import ru.mirea.bookshop.repos.BookRepository;
 import ru.mirea.bookshop.services.interfaces.BookService;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class BookServiceImpl implements BookService {
